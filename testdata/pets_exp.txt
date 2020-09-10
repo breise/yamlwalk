@@ -1,0 +1,26 @@
+/definitions/Cat/allOf/0/$ref: #/definitions/Pet
+/definitions/Cat/allOf/1/properties/huntingSkill/default: lazy
+/definitions/Cat/allOf/1/properties/huntingSkill/description: The measured skill for hunting
+/definitions/Cat/allOf/1/properties/huntingSkill/enum/0: clueless
+/definitions/Cat/allOf/1/properties/huntingSkill/enum/1: lazy
+/definitions/Cat/allOf/1/properties/huntingSkill/enum/2: adventurous
+/definitions/Cat/allOf/1/properties/huntingSkill/enum/3: aggressive
+/definitions/Cat/allOf/1/properties/huntingSkill/type: string
+/definitions/Cat/allOf/1/required/0: huntingSkill
+/definitions/Cat/allOf/1/type: object
+/definitions/Cat/description: A representation of a cat
+/definitions/Dog/allOf/0/$ref: #/definitions/Pet
+/definitions/Dog/allOf/1/properties/packSize/default: 0
+/definitions/Dog/allOf/1/properties/packSize/description: the size of the pack the dog is from
+/definitions/Dog/allOf/1/properties/packSize/format: int32
+/definitions/Dog/allOf/1/properties/packSize/minimum: 0
+/definitions/Dog/allOf/1/properties/packSize/type: integer
+/definitions/Dog/allOf/1/required/0: packSize
+/definitions/Dog/allOf/1/type: object
+/definitions/Dog/description: A representation of a dog
+/definitions/Pet/discriminator: petType
+/definitions/Pet/properties/name/type: string
+/definitions/Pet/properties/petType/type: string
+/definitions/Pet/required/0: name
+/definitions/Pet/required/1: petType
+/definitions/Pet/type: object

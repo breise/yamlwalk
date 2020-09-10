@@ -1,0 +1,44 @@
+definitions:
+  Cat:
+    allOf:
+    - $ref: '#/definitions/Pet'
+    - properties:
+        huntingSkill:
+          default: lazy
+          description: The measured skill for hunting
+          enum:
+          - clueless
+          - lazy
+          - adventurous
+          - aggressive
+          type: string
+      required:
+      - huntingSkill
+      type: object
+    description: A representation of a cat
+  Dog:
+    allOf:
+    - $ref: '#/definitions/Pet'
+    - properties:
+        packSize:
+          default: 0
+          description: the size of the pack the dog is from
+          format: int32
+          minimum: 0
+          type: integer
+      required:
+      - packSize
+      type: object
+    description: A representation of a dog
+  Pet:
+    discriminator: petType
+    properties:
+      name:
+        type: string
+      petType:
+        type: string
+    required:
+    - name
+    - petType
+    type: object
+
