@@ -33,7 +33,7 @@ value of type `error`.
 
 `WalkDepthFirst()` processing stops upon the first non-`nil` error value returned by `myActionFunc()`, and returns that error.
 
-### `node`
+## `node`
 
 Inside of `myActionFunc()`, the first thing you will probably want to do is determine what type of node you have.
 ```
@@ -54,14 +54,14 @@ check above, returning `false` if `isMap` or `isArray`, true otherwise:
   }
 ```
 
-### `ancestors`
+## `ancestors`
 
 While working with your node, you may wish to examine or list its parent-key,
 its parent's parent-key, etc... in other words, its ancestors.
 
 `ancestors` is an [`*RStack`](https://github.com/breise/rstack).
 
-`RStack` is a recursive stack, meaning that every node of the stack is itself a stack.
+`RStack` is a recursive stack, meaning that every node of the stack is itself an RStack.
 
 The methods on `RStack` you may find useful in `myActionFunc()` are:
 - `func (s *RStack) Pop() (*RStack, interface{}, error)`
@@ -69,7 +69,7 @@ The methods on `RStack` you may find useful in `myActionFunc()` are:
 - `func (s *RStack) ToStringSlice() []string`
 - `func (s *RStack) Join(sep string) string`
 
-### The Closure
+## The Closure
 
 Since `myActionFunc()` does not return any value (other than the error type),
 you will have to depend on side effects.  You can `Println()` or write to a
@@ -90,3 +90,6 @@ around which `func patchCcy()` forms a closure.
 In each case, `func main()`, after invoking `yamlwalk.WalkDepthFirst()`, prints
 the value of the closed variable.
 
+## Example
+
+- `yamlwalk/example/example1.go`
