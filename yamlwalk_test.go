@@ -20,6 +20,7 @@ var cases = []struct {
 	{"Array as yaml", "testdata/array_inp.yaml", "testdata/array_exp.txt"},
 	{"Map as yaml", "testdata/map_inp.yaml", "testdata/map_exp.txt"},
 	{"json with nulls", "testdata/nulls_inp.json", "testdata/nulls_exp.txt"},
+	{"yaml with numeric keys", "testdata/num_inp.yaml", "testdata/num_exp.txt"},
 }
 
 func TestYamlWalk(t *testing.T) {
