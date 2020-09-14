@@ -48,6 +48,11 @@ func main() {
 		log.Fatalf("Cannot yamlwalk.WalkDepthFirst(): %s", err)
 	}
 	fmt.Printf("Suitable as input to yaml-patch:%s\n", strings.Join(ccyPatchCommands, ``))
+
+	// show the type of each node
+	if err := yamlwalk.WalkDepthFirst(shoppingList, showTypes); err != nil {
+		log.Fatalf("Cannot yamlwalk.WalkDepthFirst(): %s", err)
+	}
 }
 
 var total float64
@@ -84,5 +89,10 @@ func patchCcy(node interface{}, ancestors *rstack.RStack) error {
 			}
 		}
 	}
+	return nil
+}
+
+func showTypes(node interface{}, ancestors *rstack.RStack) error {
+	fmt.Printf("Value: %v, Type: %T\n", node, node)
 	return nil
 }

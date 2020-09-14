@@ -1,0 +1,21 @@
+{
+	"first": {
+		"g": "alpha",
+		"h": "aleph",
+		"k": null
+	},
+	"second": {
+		"g": "beta",
+		"h": "bais",
+		"k": null
+	},
+	"third": {
+		"g": null,
+		"h": "gimmel",
+		"k": "",
+		"j": {
+			"something": 1,
+			"nothing": null
+		}
+	}
+}

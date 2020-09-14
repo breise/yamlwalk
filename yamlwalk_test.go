@@ -19,6 +19,7 @@ var cases = []struct {
 	{"Pets as json", "testdata/pets_inp.json", "testdata/pets_exp.txt"},
 	{"Array as yaml", "testdata/array_inp.yaml", "testdata/array_exp.txt"},
 	{"Map as yaml", "testdata/map_inp.yaml", "testdata/map_exp.txt"},
+	{"json with nulls", "testdata/nulls_inp.json", "testdata/nulls_exp.txt"},
 }
 
 func TestYamlWalk(t *testing.T) {
@@ -38,10 +39,10 @@ func TestYamlWalk(t *testing.T) {
 				t.Fatalf("Cannot WalkDepthFirst(). Error: %s", err)
 			}
 			sort.Strings(pathValues)
-			got := strings.Join(pathValues, "\n")
+			got := strings.TrimSpace(strings.Join(pathValues, "\n"))
 			exp := strings.TrimSpace(string(expB))
 			if exp != got {
-				t.Errorf("%s:\nExp:\n%s\n\tGot:\n%s\n", desc, exp, got)
+				t.Errorf("%s:\nExp:\n{{{%s}}}\nGot:\n{{{%s}}}\n", desc, exp, got)
 			}
 		})
 	}
