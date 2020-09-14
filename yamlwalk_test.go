@@ -14,14 +14,19 @@ var cases = []struct {
 	name       string
 	inputFile  string
 	expectFile string
+	prune      bool
 }{
-	{"Pets as yaml", "testdata/pets_inp.yaml", "testdata/pets_exp.txt"},
-	{"Pets as json", "testdata/pets_inp.json", "testdata/pets_exp.txt"},
-	{"Array as yaml", "testdata/array_inp.yaml", "testdata/array_exp.txt"},
-	{"Map as yaml", "testdata/map_inp.yaml", "testdata/map_exp.txt"},
-	{"json with nulls", "testdata/nulls_inp.json", "testdata/nulls_exp.txt"},
-	{"yaml with numeric keys", "testdata/num_inp.yaml", "testdata/num_exp.txt"},
+	{name: "Pets as yaml", inputFile: "testdata/pets_inp.yaml", expectFile: "testdata/pets_exp.txt"},
+	{name: "Pets as json", inputFile: "testdata/pets_inp.json", expectFile: "testdata/pets_exp.txt"},
+	{name: "Pets as yaml, prune_arrays", inputFile: "testdata/pets_inp.yaml", expectFile: "testdata/pets_prune_exp.txt", prune: true},
+	{name: "Pets as json, prune_arrays", inputFile: "testdata/pets_inp.json", expectFile: "testdata/pets_prune_exp.txt", prune: true},
+	{name: "Array as yaml", inputFile: "testdata/array_inp.yaml", expectFile: "testdata/array_exp.txt"},
+	{name: "Map as yaml", inputFile: "testdata/map_inp.yaml", expectFile: "testdata/map_exp.txt"},
+	{name: "json with nulls", inputFile: "testdata/nulls_inp.json", expectFile: "testdata/nulls_exp.txt"},
+	{name: "yaml with numeric keys", inputFile: "testdata/num_inp.yaml", expectFile: "testdata/num_exp.txt"},
 }
+
+var prune bool
 
 func TestYamlWalk(t *testing.T) {
 	for i, tc := range cases {
@@ -36,6 +41,7 @@ func TestYamlWalk(t *testing.T) {
 				t.Fatalf("Cannot read file '%s'", tc.expectFile)
 			}
 			pathValues = []string{}
+			prune = tc.prune
 			if err := WalkDepthFirst(b, listPaths); err != nil {
 				t.Fatalf("Cannot WalkDepthFirst(). Error: %s", err)
 			}
@@ -52,6 +58,9 @@ func TestYamlWalk(t *testing.T) {
 var pathValues []string
 
 func listPaths(node interface{}, ancestors *rstack.RStack) (bool, error) {
+	if prune && NodeIsArray(node) {
+		return true, nil
+	}
 	if NodeIsScalar(node) {
 		els := []string{``} // force leading `/` in Join()
 		els = append(els, ancestors.ToStringSlice()...)

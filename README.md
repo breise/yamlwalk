@@ -18,7 +18,7 @@ func main() {
 
 var myResult ...
 
-func myActionFunc(node interface{}, ancestors *rstack.RStack) error {
+func myActionFunc(node interface{}, ancestors *rstack.RStack) (bool, error) {
   ...
   // update myResult
 }
@@ -26,12 +26,14 @@ func myActionFunc(node interface{}, ancestors *rstack.RStack) error {
 
 As each node is visited, `myActionFunc` is invoked.  Its signature is
 ```
-  func myActionFunc(node interface{}, ancestors *rstack.RStack) error
+  func myActionFunc(node interface{}, ancestors *rstack.RStack) (bool, error)
 ```
-`myActionFunc()` is passed the current node and its ancestors, and returns a
-value of type `error`.
-
-`WalkDepthFirst()` processing stops upon the first non-`nil` error value returned by `myActionFunc()`, and returns that error.
+`myActionFunc()` is passed the current node and its ancestors, and returns 2 values:
+1. a `bool`
+** A `true` return value indicates to `WalkDepthFirst()` to _prune_ the tree at this point.  That is, do not proceed further down the current branch.
+** You can use this in `myActionFunc()`, returning `true` when encountering a node whose children you don't want to traverse, and returning `false` when encountering a node whose children you _do_ want to traverse
+** If you want to traverse the entire tree, always return `false` from `myActionFunc()`
+1. an `error`. A non-nil error causes `WalkDepthFirst()` to stop processing and report the error.
 
 ## `node`
 

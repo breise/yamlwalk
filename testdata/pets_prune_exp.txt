@@ -1,0 +1,6 @@
+/definitions/Cat/description: A representation of a cat
+/definitions/Dog/description: A representation of a dog
+/definitions/Pet/discriminator: petType
+/definitions/Pet/properties/name/type: string
+/definitions/Pet/properties/petType/type: string
+/definitions/Pet/type: object
