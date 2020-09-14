@@ -39,7 +39,7 @@ func main() {
 	if err := yamlwalk.WalkDepthFirst(shoppingList, sumTotal); err != nil {
 		log.Fatalf("Cannot yamlwalk.WalkDepthFirst(): %s", err)
 	}
-	fmt.Printf("Total is %0.2f\n", total)
+	fmt.Printf("Total is %0.2f\n\n", total)
 
 	// Produce a yaml-patch document with which we can patch the original to add
 	// a sibling node `ccy: USD` to each `unitPrice` node.  (Patching yaml
@@ -47,7 +47,7 @@ func main() {
 	if err := yamlwalk.WalkDepthFirst(shoppingList, patchCcy); err != nil {
 		log.Fatalf("Cannot yamlwalk.WalkDepthFirst(): %s", err)
 	}
-	fmt.Printf("Suitable as input to yaml-patch:%s\n", strings.Join(ccyPatchCommands, ``))
+	fmt.Printf("Suitable as input to yaml-patch:%s\n\n", strings.Join(ccyPatchCommands, ``))
 
 	// show the type of each node
 	if err := yamlwalk.WalkDepthFirst(shoppingList, showTypes); err != nil {
@@ -57,7 +57,7 @@ func main() {
 
 var total float64
 
-func sumTotal(node interface{}, ancestors *rstack.RStack) error {
+func sumTotal(node interface{}, ancestors *rstack.RStack) (bool, error) {
 	if m, isMap := node.(map[interface{}]interface{}); isMap {
 		if uP, ok := m["unitPrice"]; ok {
 			qty, haveQty := m["qty"]
@@ -68,17 +68,17 @@ func sumTotal(node interface{}, ancestors *rstack.RStack) error {
 			total += price
 		}
 	}
-	return nil
+	return false, nil
 }
 
 var ccyPatchCommands []string
 
-func patchCcy(node interface{}, ancestors *rstack.RStack) error {
+func patchCcy(node interface{}, ancestors *rstack.RStack) (bool, error) {
 	if yamlwalk.NodeIsScalar(node) {
 		if _, isFloat := node.(float64); isFloat {
 			progenitors, parent, err := ancestors.Pop()
 			if err != nil {
-				return err
+				return false, err
 			}
 			if parent == "unitPrice" {
 				ccyPatchCommand := fmt.Sprintf(`
@@ -89,10 +89,10 @@ func patchCcy(node interface{}, ancestors *rstack.RStack) error {
 			}
 		}
 	}
-	return nil
+	return false, nil
 }
 
-func showTypes(node interface{}, ancestors *rstack.RStack) error {
-	fmt.Printf("Value: %v, Type: %T\n", node, node)
-	return nil
+func showTypes(node interface{}, ancestors *rstack.RStack) (bool, error) {
+	fmt.Printf("Type: %T; Value: %v\n", node, node)
+	return false, nil
 }

@@ -8,7 +8,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func WalkDepthFirst(b []byte, fn func(node interface{}, ancestors *rst.RStack) error) error {
+func WalkDepthFirst(b []byte, fn func(node interface{}, ancestors *rst.RStack) (bool, error)) error {
 	var v interface{}
 	if err := yaml.Unmarshal(b, &v); err != nil {
 		return fmt.Errorf("WalkDepthFirst(): Cannot Unmarshal(): %s", err)
@@ -19,9 +19,13 @@ func WalkDepthFirst(b []byte, fn func(node interface{}, ancestors *rst.RStack) e
 	return nil
 }
 
-func wdf(node interface{}, ancestors *rst.RStack, fn func(node interface{}, ancestors *rst.RStack) error) error {
-	if err := fn(node, ancestors); err != nil {
+func wdf(node interface{}, ancestors *rst.RStack, fn func(node interface{}, ancestors *rst.RStack) (bool, error)) error {
+	prune, err := fn(node, ancestors)
+	if err != nil {
 		return err
+	}
+	if prune {
+		return nil
 	}
 	if thisMap, isMap := node.(map[interface{}]interface{}); isMap {
 		for k, v := range thisMap {

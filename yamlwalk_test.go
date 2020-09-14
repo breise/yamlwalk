@@ -51,7 +51,7 @@ func TestYamlWalk(t *testing.T) {
 
 var pathValues []string
 
-func listPaths(node interface{}, ancestors *rstack.RStack) error {
+func listPaths(node interface{}, ancestors *rstack.RStack) (bool, error) {
 	if NodeIsScalar(node) {
 		els := []string{``} // force leading `/` in Join()
 		els = append(els, ancestors.ToStringSlice()...)
@@ -60,5 +60,5 @@ func listPaths(node interface{}, ancestors *rstack.RStack) error {
 		pathValue := strings.Join([]string{path, n}, ": ")
 		pathValues = append(pathValues, pathValue)
 	}
-	return nil
+	return false, nil
 }
