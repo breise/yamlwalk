@@ -1,6 +1,6 @@
 # yamlwalk
 
-Walk a yaml or json tree, performing an action at each node.
+Traverse (Walk) a yaml or json tree, performing an action at each node.
 
 ```
 import (
@@ -24,7 +24,7 @@ func myActionFunc(node interface{}, ancestors *rstack.RStack) (bool, error) {
 }
 ```
 
-As each node is visited, `myActionFunc` is invoked.  Its signature is
+As `WalkDepthFirst()` visits each node, it invokes `myActionFunc`, whose signature is
 ```
   func myActionFunc(node interface{}, ancestors *rstack.RStack) (bool, error)
 ```
@@ -33,7 +33,7 @@ As each node is visited, `myActionFunc` is invoked.  Its signature is
   * A `true` return value indicates to `WalkDepthFirst()` to _prune_ the tree at this point.  That is, do not proceed further down the current branch.
   * You can use this in `myActionFunc()`, returning `true` when encountering a node whose children you _don't_ want to traverse, and returning `false` when encountering a node whose children you _do_ want to traverse
   * If you want to traverse the entire tree, always return `false` from `myActionFunc()`
-1. an `error`. A non-nil error causes `WalkDepthFirst()` to stop processing and report the error.
+2. an `error`. A non-nil error causes `WalkDepthFirst()` to stop processing and report the error.
 
 ## `node`
 
@@ -73,7 +73,7 @@ The methods on `RStack` you may find useful in `myActionFunc()` are:
 
 ## The Closure
 
-Since `myActionFunc()` does not return any value (other than the error type),
+Since `myActionFunc()` does not return a result,
 you will have to depend on side effects.  You can `Println()` or write to a
 file from `myActionFunc()`, but you may prefer to store results in a closed
 variable, that is, a package variable around which `myActionFunc()` forms a
