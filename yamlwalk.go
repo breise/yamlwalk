@@ -13,10 +13,11 @@ func WalkDepthFirst(b []byte, fn func(node interface{}, ancestors *rst.RStack) (
 	if err := yaml.Unmarshal(b, &v); err != nil {
 		return fmt.Errorf("WalkDepthFirst(): Cannot Unmarshal(): %s", err)
 	}
-	if err := wdf(v, rst.New(), fn); err != nil {
-		return err
-	}
-	return nil
+	return WalkNodeDepthFirst(v, fn)
+}
+
+func WalkNodeDepthFirst(node interface{}, fn func(node interface{}, ancestors *rst.RStack) (bool, error)) error {
+	return wdf(node, rst.New(), fn)
 }
 
 func wdf(node interface{}, ancestors *rst.RStack, fn func(node interface{}, ancestors *rst.RStack) (bool, error)) error {
